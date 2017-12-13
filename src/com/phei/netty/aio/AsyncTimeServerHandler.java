@@ -22,8 +22,8 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * @author Administrator
- * @date 2014年2月16日
  * @version 1.0
+ * @date 2014年2月16日
  */
 public class AsyncTimeServerHandler implements Runnable {
 
@@ -33,15 +33,14 @@ public class AsyncTimeServerHandler implements Runnable {
     AsynchronousServerSocketChannel asynchronousServerSocketChannel;
 
     public AsyncTimeServerHandler(int port) {
-	this.port = port;
-	try {
-	    asynchronousServerSocketChannel = AsynchronousServerSocketChannel
-		    .open();
-	    asynchronousServerSocketChannel.bind(new InetSocketAddress(port));
-	    System.out.println("The time server is start in port : " + port);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+        this.port = port;
+        try {
+            asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open();
+            asynchronousServerSocketChannel.bind(new InetSocketAddress(port));
+            System.out.println("The time server is start in port : " + port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -52,18 +51,20 @@ public class AsyncTimeServerHandler implements Runnable {
     @Override
     public void run() {
 
-	latch = new CountDownLatch(1);
-	doAccept();
-	try {
-	    latch.await();
-	} catch (InterruptedException e) {
-	    e.printStackTrace();
-	}
+        System.out.println("11111111111");
+        latch = new CountDownLatch(1);
+        System.out.println("222222222222222");
+        doAccept();
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void doAccept() {
-	asynchronousServerSocketChannel.accept(this,
-		new AcceptCompletionHandler());
+        // 异步操作
+        asynchronousServerSocketChannel.accept(this, new AcceptCompletionHandler());
     }
 
 }
