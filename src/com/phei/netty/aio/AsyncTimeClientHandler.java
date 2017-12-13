@@ -74,40 +74,32 @@ public class AsyncTimeClientHandler implements CompletionHandler<Void, AsyncTime
                     client.write(buffer, buffer, this);
                 } else {
                     ByteBuffer readBuffer = ByteBuffer.allocate(1024);
-                    client.read(
-                            readBuffer,
-                            readBuffer,
-                            new CompletionHandler<Integer, ByteBuffer>() {
-                                @Override
-                                public void completed(Integer result,
-                                                      ByteBuffer buffer) {
-                                    buffer.flip();
-                                    byte[] bytes = new byte[buffer
-                                            .remaining()];
-                                    buffer.get(bytes);
-                                    String body;
-                                    try {
-                                        body = new String(bytes,
-                                                "UTF-8");
-                                        System.out.println("Now is : "
-                                                + body);
-                                        latch.countDown();
-                                    } catch (UnsupportedEncodingException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
+                    client.read(readBuffer, readBuffer, new CompletionHandler<Integer, ByteBuffer>() {
+                        @Override
+                        public void completed(Integer result, ByteBuffer buffer) {
+                            buffer.flip();
+                            byte[] bytes = new byte[buffer.remaining()];
+                            buffer.get(bytes);
+                            String body;
+                            try {
+                                body = new String(bytes, "UTF-8");
+                                System.out.println("Now is : " + body);
+                                latch.countDown();
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                                @Override
-                                public void failed(Throwable exc,
-                                                   ByteBuffer attachment) {
-                                    try {
-                                        client.close();
-                                        latch.countDown();
-                                    } catch (IOException e) {
-                                        // ingnore on close
-                                    }
-                                }
-                            });
+                        @Override
+                        public void failed(Throwable exc, ByteBuffer attachment) {
+                            try {
+                                client.close();
+                                latch.countDown();
+                            } catch (IOException e) {
+                                // ingnore on close
+                            }
+                        }
+                    });
                 }
             }
 
